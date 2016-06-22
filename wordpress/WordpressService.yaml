@@ -7,10 +7,14 @@ metadata:
 
 spec:
   ports:
-  - name: wordpress
+  - name: http
     port: 80
     protocol: TCP
-    targetPort: 8888
+  - name: mysql
+    port: 3306
+    protocol: TCP
+
+  type: LoadBalancer
 
   selector:
     app: my-wordpress

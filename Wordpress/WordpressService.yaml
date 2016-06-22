@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-wordpress
+  labels:
+    name: my-wordpress
+
+spec:
+  ports:
+  - name: wordpress
+    port: 80
+    protocol: TCP
+    targetPort: 8888
+
+  selector:
+    app: my-wordpress

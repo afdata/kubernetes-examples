@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-drupal
+  labels:
+    name: my-drupal
+
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+
+  selector:
+    app: my-drupal
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  generation: 1
+  labels:
+    app: my-drupal
+  name: my-drupal
+  namespace: default
+
+spec:
+  replicas: 1
+  selector:
+    app: my-drupal
+  template:
+    metadata:
+      labels:
+        app: my-drupal
+
+    spec:
+      containers:
+      - name: drupal
+        image: drupal
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+status:
+  fullyLabeledReplicas: 1
+  observedGeneration: 1
+  replicas: 1

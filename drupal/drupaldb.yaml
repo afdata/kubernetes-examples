@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-drupaldb
+  labels:
+    name: my-drupaldb
+
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+    protocol: TCP
+  selector:
+    app: my-drupaldb
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  generation: 1
+  labels:
+    app: my-drupaldb
+  name: my-drupaldb
+  namespace: default
+
+spec:
+  replicas: 1
+  selector:
+    app: my-drupaldb
+  template:
+    metadata:
+      labels:
+        app: my-drupaldb
+
+    spec:
+      containers:
+      - name: mysql
+        image: mariadb
+        ports:
+        - name: mariadb
+          containerPort: 3306
+          protocol: TCP
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: rootpasswort
+        - name: MYSQL_USER
+          value: superuser
+        - name: MYSQL_PASSWORD
+          value: passwort
+        - name: MYSQL_DATABASE
+          value: drupal
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+status:
+  fullyLabeledReplicas: 1
+  observedGeneration: 1
+  replicas: 1

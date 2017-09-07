@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: nginxservice
+  name: nginxservice
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: cb7nginxfpm
+  type: NodePort
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  generation: 1
+  labels:
+    app: cb7nginxfpm
+  name: cb7nginxfpm
+  namespace: default
+
+spec:
+  replicas: 1
+  selector:
+    app: cb7nginxfpm
+  template:
+    metadata:
+      labels:
+        app: cb7nginxfpm
+
+    spec:
+      containers:
+      - name: cb7nginxfpm
+        image: DOCKER_REGISTRY:5000/cb7nginxfpm
+        ports:
+        - name: nginx
+          containerPort: 80
+          protocol: TCP
+        - name: fpm
+          containerPort: 9000
+          protocol: TCP
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+status:
+  fullyLabeledReplicas: 1
+  observedGeneration: 1
+  replicas: 1

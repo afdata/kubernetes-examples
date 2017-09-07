@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  generation: 1
+  labels:
+    app: dockerlogstash
+  name: dockerlogstash
+  namespace: default
+
+spec:
+  replicas: 1
+  selector:
+    app: dockerlogstash
+  template:
+    metadata:
+      labels:
+        app: dockerlogstash
+
+    spec:
+      containers:
+      - name: dockerlogstash
+        image: DOCKER_REGISTRY:5000/dockerlogstash
+        ports:
+        - name: temp
+          containerPort: 12345
+          protocol: TCP
+        volumeMounts:
+          - mountPath: /datas/logstash-logs
+            name: logdir
+
+      volumes:
+      - name: logdir
+        emptyDir:
+         medium: Memory
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+status:
+  fullyLabeledReplicas: 1
+  observedGeneration: 1
+  replicas: 1

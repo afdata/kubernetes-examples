@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: varnish-cluster-service
+  labels:
+    name: varnish-cluster-service
+spec:
+  ports:
+    - port: 80
+      name: varnish
+  selector:
+    cluster: varnisher
+  type: LoadBalancer
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: varnish-cluster-ingress
+spec:
+  rules:
+  - host: www.mydrupalsite.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: varnish-cluster-service
+          servicePort: 80

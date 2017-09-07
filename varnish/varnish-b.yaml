@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: varnish-b
+  labels:
+    name: varnish-b
+
+spec:
+  ports:
+    - name: http
+      port: 80
+    - name: adminport
+      port: 6082
+  selector:
+    node: varnish-b
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: varnish-b
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        node: varnish-b
+        unit: varnish-service-b
+        cluster: varnisher
+    spec:
+      containers:
+      - name: varnish-b
+        image: DOCKER_REGISTRY:5000/varnish
+        ports:
+        - name: varnish-b
+          containerPort: 80
+          protocol: TCP
+        - name: adminport
+          containerPort: 6082
+          protocol: TCP
+        env:
+        - name: HTTPHOST
+          value: nginx
+
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+status:
+  fullyLabeledReplicas: 1
+  observedGeneration: 1
+  replicas: 1

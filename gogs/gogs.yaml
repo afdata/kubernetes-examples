@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gogs
+  labels:
+    name: gogs
+
+spec:
+  type: NodePort
+  ports:
+  - name: gogs-http
+    port: 3000
+    protocol: TCP
+    nodePort: 30001
+    targetPort: 3000
+  - name: gogs-ssh
+    port: 22
+    protocol: TCP
+    nodePort: 30002
+    targetPort: 22
+
+  selector:
+    app: gogs
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  generation: 1
+  labels:
+    app: gogs
+  name: simple-git-gogs
+  namespace: default
+
+spec:
+  replicas: 1
+  selector:
+    app: gogs
+  template:
+    metadata:
+      labels:
+        app: gogs
+
+    spec:
+      containers:
+      - name: gogs-git
+        image: gogs/gogs
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        - name: ssh
+          containerPort: 22
+          protocol: TCP
+
+        volumeMounts:
+        - mountPath: /data
+          name: nfs-gogs-data
+
+      - name: mysql
+        image: mariadb
+        ports:
+        - name: mariadb
+          containerPort: 3306
+          protocol: TCP
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: ToTalSecurePasswd
+
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: nfs-gogs-mysql
+
+      volumes:
+      - name: nfs-gogs-data
+        nfs:
+          server: 1.2.3.4
+          path: "/srv/gogs-data"
+      - name: nfs-gogs-mysql
+        nfs:
+          server: 4.3.2.1
+          path: "/srv/gogs-mysql"
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+
+status:
+  fullyLabeledReplicas: 1
+  observedGeneration: 1
+  replicas: 1
+
+

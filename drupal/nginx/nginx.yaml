@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: nginx
+  name: nginx
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: drupal-nginx
+  type: NodePort
+
+
+----
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  generation: 1
+  labels:
+    app: drupal-nginx
+  name: drupal-nginx
+  namespace: default
+
+spec:
+  replicas: 1
+  selector:
+    app: drupal-nginx
+  template:
+    metadata:
+      labels:
+        app: drupal-nginx
+
+    spec:
+      containers:
+      - name: drupal-nginx
+        image: DOCKER_REGISTRY:5000/drupalnginx
+        ports:
+        - name: nginx
+          containerPort: 80
+          protocol: TCP
+        env:
+        - name: VARHOST
+          value: fpm-host-name  # Name des Services für den jeweiligen Hosts den man benutzen möchte
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+status:
+  fullyLabeledReplicas: 1
+  observedGeneration: 1
+  replicas: 1

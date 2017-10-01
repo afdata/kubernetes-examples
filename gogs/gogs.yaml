@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: gogs-git
-        image: gogs/gogs
+        image: gogs/gogs:0.11.29
         ports:
         - name: http
           containerPort: 3000
@@ -52,13 +52,16 @@ spec:
         - name: ssh
           containerPort: 22
           protocol: TCP
+        env:
+        - name: SOCAT_LINK
+          value: false
 
         volumeMounts:
         - mountPath: /data
           name: nfs-gogs-data
 
       - name: mysql
-        image: mariadb
+        image: mariadb:10.2.9
         ports:
         - name: mariadb
           containerPort: 3306

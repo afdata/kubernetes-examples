@@ -23,7 +23,7 @@ RUN echo "deb-src http://repo.percona.com/apt trusty main" >> /etc/apt/sources.l
 # also, we set debconf keys to make APT a little quieter
 RUN { \
                 echo percona-server-server-5.6 percona-server-server/data-dir select ''; \
-                echc percona-server-server-5.6 percona-server-server/root_password password ''; \
+                echo percona-server-server-5.6 percona-server-server/root_password password ''; \
         } | debconf-set-selections \
         && apt-get update && DEBIAN_FRONTEND=nointeractive apt-get install -y --force-yes percona-xtradb-cluster-client-"${MYSQL_VERSION}" \ 
            percona-xtradb-cluster-common-"${MYSQL_VERSION}" percona-xtradb-cluster-server-"${MYSQL_VERSION}" \

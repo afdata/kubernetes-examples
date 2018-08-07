@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: magento2
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host: magento.localhost
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: magento2
+          servicePort: 80

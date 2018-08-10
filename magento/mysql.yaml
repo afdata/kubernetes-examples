@@ -7,14 +7,14 @@ metadata:
 
 spec:
   ports:
-    - name: mysql
-      port: 3306
+  - name: mysql
+    port: 3306
+    protocol: TCP
   selector:
     app: mysql
   type: ClusterIP
 
 ---
-
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -34,21 +34,19 @@ spec:
         app: mysql
 
     spec:
-      nodeSelector:
-        name: master
       containers:
       - name: mysql
-        image: mysql/mysql-server:5.7
+        image: mariadb:10.2.7
         ports:
-        - name: mysql
+        - name: mariadb
           containerPort: 3306
           protocol: TCP
         env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: abc1234
         - name: MYSQL_USER
           value: magento
         - name: MYSQL_PASSWORD
-          value: abc1234
-        - name: MYSQL_ROOT_PASSWORD
           value: abc1234
         - name: MYSQL_DATABASE
           value: magento
@@ -65,3 +63,12 @@ spec:
       - name: host-logs
         hostPath:
           path: /datas/logs
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+status:
+  fullyLabeledReplicas: 1
+  observedGeneration: 1
+  replicas: 1

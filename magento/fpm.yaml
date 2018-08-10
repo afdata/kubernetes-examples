@@ -8,6 +8,9 @@ spec:
   ports:
     - name: fpm
       port: 9000
+      protocol: TCP
+      #nodePort: 30000
+      #targetPort: 9000
   selector:
     app: fpm
   type: LoadBalancer
@@ -35,19 +38,11 @@ spec:
     spec:
       containers:
       - name: fpm
-        image: localhost:5000/php-fpm
+        image: localhost:5000/php
         ports:
         - name: fpm
           containerPort: 9000
           protocol: TCP
-        volumeMounts:
-            - mountPath: /var/www/html
-              name: magento
-      volumes:
-      - name: magento
-        hostPath:
-          path: /datas/magento
-
 
       dnsPolicy: ClusterFirst
       restartPolicy: Always

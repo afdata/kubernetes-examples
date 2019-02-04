@@ -7,11 +7,10 @@ metadata:
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-  - host: nginx.localhost
+  - host: magento.afdata.local
     http:
       paths:
       - path: /
         backend:
           serviceName: nginx
           servicePort: 80
-

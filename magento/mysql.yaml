@@ -36,24 +36,24 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: mariadb:10.2.7
+        image: bitnami/mariadb:latest
         ports:
         - name: mariadb
           containerPort: 3306
           protocol: TCP
         env:
-        - name: MYSQL_ROOT_PASSWORD
+        - name: MARIADB_ROOT_PASSWORD
           value: abc1234
-        - name: MYSQL_USER
+        - name: MARIADB_USER
           value: magento
-        - name: MYSQL_PASSWORD
+        - name: MARIADB_PASSWORD
           value: abc1234
-        - name: MYSQL_DATABASE
+        - name: MARIADB_DATABASE
           value: magento
         volumeMounts:
-            - mountPath: /var/lib/mysql
+            - mountPath: /var/lib/mysql:rw
               name: host-mysql
-            - mountPath: /var/log/mysql
+            - mountPath: /var/log/mysql:rw
               name: host-logs
 
       volumes:

@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: magento2
   name: mysql
   labels:
     name: mysql
@@ -15,30 +16,29 @@ spec:
   type: ClusterIP
 
 ---
-apiVersion: v1
-kind: ReplicationController
+apiVersion: extensions/v1beta1 
+kind: Deployment
 metadata:
-  generation: 1
+  namespace: magento2
+  name: mysql
   labels:
     app: mysql
-  name: mysql
-  namespace: default
-
 spec:
-  replicas: 1
   selector:
-    app: mysql
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: mysql
-
     spec:
       containers:
       - name: mysql
         image: mariadb:10.2.7
         ports:
-        - name: mariadb
+        - name: mysql
           containerPort: 3306
           protocol: TCP
         env:
@@ -51,24 +51,15 @@ spec:
         - name: MYSQL_DATABASE
           value: magento
         volumeMounts:
-            - mountPath: /var/lib/mysql
+            - mountPath: /var/lib/mysql:rw
               name: host-mysql
-            - mountPath: /var/log/mysql
-              name: host-logs
 
       volumes:
       - name: host-mysql
-        hostPath:
-          path: /datas/mysql
-      - name: host-logs
-        hostPath:
-          path: /datas/logs
+        nfs:
+          server: 192.168.50.85
+          path: "/srv/nfsshare/k8s-stage/magento_mysql"
 
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-      terminationGracePeriodSeconds: 30
-
-status:
-  fullyLabeledReplicas: 1
-  observedGeneration: 1
-  replicas: 1
+      terminationGracePeriodSeconds: 5

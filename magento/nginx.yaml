@@ -1,36 +1,23 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: magento2
+  name: nginx
   labels:
     name: nginx
-  name: nginx
 spec:
   ports:
     - port: 80
   selector:
     app: nginx
-  type: ClusterIP
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    name: nginxip
-  name: nginxip
-spec:
-  ports:
-    - port: 80
-  selector:
-    app: nginx
-  type: NodePort
+  type: NodePort 
 
 ---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  namespace: magento2
   name: nginx
   labels:
     app: nginx
@@ -46,21 +33,30 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: localhost:5000/nginx
+      - image: infra.afdata.local:5000/nginx
         name: nginx
         env:
          - name: VARHOST
            value: fpm
          - name: MAGENTO_VERSION
-#        command: ["/bin/sh","-c"]
-#        args: ["/usr/local/bin/magento-install.sh"]
+           value: 2.1.1
+        #command: ["/bin/sh","-c"]
+        #args: ["/tmp/magento-install.sh"]
         ports:
         - containerPort: 80
           name: nginx
         volumeMounts:
-            - mountPath: /var/www/html
+            - mountPath: /var/www/html:rw
               name: magento
+            - mountPath: /etc/nginx:rw
+              name: nginx-config
       volumes:
       - name: magento
-        hostPath:
-          path: /datas/magento
+        nfs:
+          server: 192.168.50.85
+          path: "/srv/nfsshare/k8s-stage/magento2"
+      - name: nginx-config
+        nfs:
+          server: 192.168.50.85
+          path: "/srv/nfsshare/k8s-stage/magento_nginx"
+

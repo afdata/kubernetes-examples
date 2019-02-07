@@ -17,6 +17,7 @@ RUN yum install -y      zip \
                         php-devel \
                         php-common \
                         php-intl \
+                        php-mcrypt \
                         php-mbstring \
                         php-bcmath \
                         php-json \
@@ -29,10 +30,16 @@ RUN yum install -y      zip \
 			php-mysqlnd \
 			php-xml \
                         php-pdo \
-                        php-mbstring \
                         php-gd \
                         php-opcache \
                         php-pdo \
+                        php-ctype \
+                        php-dom \ 
+                        php-hash \
+                        php-curl \
+                        php-xsl \
+                        php-openssl \
+                        php-zip \
                         libpng12-devel \
                         libjpeg-turbo-devel \
                         composer \

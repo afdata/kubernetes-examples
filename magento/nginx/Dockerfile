@@ -23,17 +23,15 @@ RUN yum install -y      nginx \
                         gettext \
                         zip
 
-
-
-# forward request and error logs to docker log collector
+# Forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
         && ln -sf /dev/stderr /var/log/nginx/error.log
 
 COPY default.conf /etc/nginx/conf.d/default.conf
 ADD  ./parse /usr/local/src/parse
 ADD  ./start /usr/local/src/start
-RUN chmod 775 /usr/local/src/parse /usr/local/src/start /etc/nginx/conf.d/default.conf
-
+ADD  ./magento-install.sh /tmp/magento-install.sh
+RUN chmod 775 /usr/local/src/parse /usr/local/src/start /etc/nginx/conf.d/default.conf /tmp/magento-install.sh
 
 WORKDIR /var/www/html
 

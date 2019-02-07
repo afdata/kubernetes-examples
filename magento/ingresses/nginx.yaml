@@ -1,13 +1,14 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+  namespace: magento2
   name: nginx
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-  - host: nginx.localhost
+  - host: magento.afdata.local 
     http:
       paths:
       - path: /

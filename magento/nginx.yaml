@@ -10,7 +10,7 @@ spec:
     - port: 80
   selector:
     app: nginx
-  type: NodePort 
+  type: NodePort
 
 ---
 
@@ -39,24 +39,21 @@ spec:
          - name: VARHOST
            value: fpm
          - name: MAGENTO_VERSION
-           value: 2.1.1
-        #command: ["/bin/sh","-c"]
-        #args: ["/tmp/magento-install.sh"]
+           value: "2.3"
+         - name: MAGENTO_BASE_URL
+           value: "http://magento.example.local/"
+         - name: ADMIN_PASSWORD
+           value: "GkxK8P52M7b32Rz"
+         - name: ADMIN_EMAIL
+           value: "user@example.com"
         ports:
         - containerPort: 80
           name: nginx
         volumeMounts:
             - mountPath: /var/www/html:rw
               name: magento
-            - mountPath: /etc/nginx:rw
-              name: nginx-config
       volumes:
       - name: magento
         nfs:
           server: 192.168.50.85
-          path: "/srv/nfsshare/k8s-stage/magento2"
-      - name: nginx-config
-        nfs:
-          server: 192.168.50.85
-          path: "/srv/nfsshare/k8s-stage/magento_nginx"
-
+          path: "/srv/nfsshare/k8s-stage/magento"

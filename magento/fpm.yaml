@@ -48,7 +48,7 @@ spec:
       - name: magento
         nfs:
           server: 192.168.50.85
-          path: "/srv/nfsshare/k8s-stage/magento2"
+          path: "/srv/nfsshare/k8s-stage/magento"
 
       dnsPolicy: ClusterFirst
       restartPolicy: Always

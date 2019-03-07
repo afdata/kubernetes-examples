@@ -16,7 +16,7 @@ spec:
   type: ClusterIP
 
 ---
-apiVersion: extensions/v1beta1 
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   namespace: magento2
@@ -50,6 +50,8 @@ spec:
           value: abc1234
         - name: MYSQL_DATABASE
           value: magento
+        - name: wait_timeout
+          value: "180"
         volumeMounts:
             - mountPath: /var/lib/mysql:rw
               name: host-mysql

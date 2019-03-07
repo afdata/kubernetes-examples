@@ -5,9 +5,9 @@ FROM centos:7
 # Install repositories and enable Remi's PHP 7.0 repository
 RUN yum install -y      http://rpms.remirepo.net/enterprise/remi-release-7.rpm \
                         https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-                        && yum-config-manager --enable remi-php70 \
+                        && yum-config-manager --enable remi-php72 \
                         && yum update -y \
-			&& useradd www-data
+                        && useradd www-data
 
 
 # Install PHP and Modules
@@ -26,15 +26,15 @@ RUN yum install -y      zip \
                         php-cli \
                         php-soap \
                         php-pgsql \
-			php-mysql \
-			php-mysqlnd \
-			php-xml \
+                        php-mysql \
+                        php-mysqlnd \
+                        php-xml \
                         php-pdo \
                         php-gd \
                         php-opcache \
                         php-pdo \
                         php-ctype \
-                        php-dom \ 
+                        php-dom \
                         php-hash \
                         php-curl \
                         php-xsl \
@@ -43,8 +43,7 @@ RUN yum install -y      zip \
                         libpng12-devel \
                         libjpeg-turbo-devel \
                         composer \
-                        postgresql-devel 
-
+                        postgresql-devel
 
 
 RUN mkdir -p /var/www/html/

@@ -8,7 +8,7 @@ metadata:
     traefik.frontend.rule.type: PathPrefixStrip
 spec:
   rules:
-  - host: magento.afdata.local 
+  - host: magento.example.local
     http:
       paths:
       - path: /

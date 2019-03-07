@@ -33,7 +33,7 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: infra.afdata.local:5000/nginx
+      - image: registry.example.local:5000/nginx
         name: nginx
         env:
          - name: VARHOST

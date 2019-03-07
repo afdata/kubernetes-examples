@@ -2,6 +2,13 @@
 
 ## Important notes
 
+To build the images please start:
+
+```bash
+docker build nginx/. -t registry.example.local:5000/nginx && docker push registry.example.local:5000/nginx
+docker build php-fpm/. -t registry.example.local:5000/php-fpm && docker push registry.example.local:5000/php-fpm
+```
+
 Before you will start, please check parameters in magento-install.sh and NFS share.
 
 Such as:

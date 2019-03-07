@@ -35,7 +35,7 @@ spec:
 
     spec:
       containers:
-      - image: infra.afdata.local:5000/php-fpm
+      - image: registry.example.local:5000/php-fpm
         imagePullPolicy: Always
         name: fpm
         ports:

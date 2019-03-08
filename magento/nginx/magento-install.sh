@@ -1,5 +1,6 @@
 #!/bin/sh
 
+## The values are passing via kubernetes.
 #MAGENTO_VERSION="2.3"
 #MAGENTO_BASE_URL="http://magento.example.local/"
 #ADMIN_PASSWORD="GkxK8P52M7b32Rz"
@@ -23,7 +24,7 @@ fi
 
 if [ ! -d "/var/www/html/vendor/zendframework" ]; then
   cd /var/www/html && composer install
-else echo "Magento dependencieshad been installed."
+else echo "Magento dependencies had been installed."
 fi
 
 if [ ! -f "/var/www/html/magento-install" ]; then
